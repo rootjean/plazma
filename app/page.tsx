@@ -32,14 +32,14 @@ export default function Home() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-zinc-950/50" />
-        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col justify-center gap-12 px-6 pb-16 pt-28 text-white lg:flex-row lg:items-end lg:justify-between lg:pb-24">
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col justify-center gap-5 px-6 pb-16 pt-28 text-white lg:flex-row lg:items-end lg:justify-between lg:pb-24">
           {/* Texto principal, apegado a la izquierda */}
           <div className="max-w-xl text-left lg:self-center">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-7xl">
               Soluciones tecnológicas para hacer crecer tu negocio
             </h1>
             <p className="mt-6 text-lg text-zinc-200 sm:text-xl">
-              En Plazma Ideas creamos y vendemos aplicaciones SaaS que
+              En Plazma Ideas creamos aplicaciones que
               resuelven los retos reales de tu empresa.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">

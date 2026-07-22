@@ -35,7 +35,7 @@ export default function Navbar() {
         </Link>
 
         {/* Menú pill centrado (escritorio) */}
-        <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1.5 backdrop-blur-md md:flex">
+        <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
           {links.map((link) => {
             const active = pathname === link.href;
             return (

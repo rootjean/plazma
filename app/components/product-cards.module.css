@@ -1,14 +1,16 @@
-/* ---------- riel de cards simples ---------- */
-.rail {
+/* ---------- slider de cards ---------- */
+/* ventana: solo deja ver cards completas */
+.viewport {
+  overflow: hidden;
+  padding: 8px 0 16px;
+  max-width: 100%;
+}
+
+/* pista que se desliza */
+.track {
   display: flex;
   gap: 14px;
-  overflow-x: auto;
-  padding: 8px 4px 16px;
-  scrollbar-width: none;
-  scroll-snap-type: x mandatory;
-}
-.rail::-webkit-scrollbar {
-  display: none;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card {
@@ -16,7 +18,6 @@
   flex: 0 0 auto;
   width: 230px;
   height: 250px;
-  scroll-snap-align: start;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   padding: 26px 22px;
@@ -107,9 +108,13 @@
     background 240ms ease,
     border-color 240ms ease;
 }
-.arrow:hover {
+.arrow:hover:not(:disabled) {
   background: rgba(193, 235, 20, 0.2);
   border-color: #c1eb14;
+}
+.arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 .hint {
   font-size: 11px;
@@ -134,12 +139,11 @@
   pointer-events: auto;
 }
 
-/* ---------- visor: crece desde la card y gira ---------- */
+/* ---------- visor: crece desde la card hasta pantalla completa ---------- */
 .viewer {
   position: fixed;
   z-index: 100;
   visibility: hidden;
-  perspective: 2000px;
   transition:
     top 1100ms cubic-bezier(0.16, 1, 0.3, 1),
     left 1100ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -150,16 +154,10 @@
   visibility: visible;
 }
 
-/* la pieza que gira: frente = card, espalda = landing */
+/* contenedor de las dos capas: portada (card) y landing */
 .flip {
   position: absolute;
   inset: 0;
-  transform-style: preserve-3d;
-  transform: rotateY(0deg);
-  transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.viewerOpen .flip {
-  transform: rotateY(180deg);
 }
 
 .face {
@@ -167,7 +165,6 @@
   inset: 0;
   border-radius: 12px;
   overflow: hidden;
-  backface-visibility: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background:
     radial-gradient(140% 160% at 15% 0%, rgba(193, 235, 20, 0.16), transparent 60%),
@@ -178,7 +175,7 @@
   border-radius: 0;
 }
 
-/* frente: réplica de la card */
+/* portada: réplica de la card, se desvanece al abrir */
 .faceFront {
   color: #eaf3ea;
   padding: 26px 22px;
@@ -186,6 +183,12 @@
   flex-direction: column;
   justify-content: flex-end;
   gap: 8px;
+  opacity: 1;
+  transition: opacity 500ms ease;
+}
+.viewerOpen .faceFront {
+  opacity: 0;
+  pointer-events: none;
 }
 .faceFront::before {
   content: "";
@@ -197,12 +200,18 @@
   background: #c1eb14;
 }
 
-/* espalda: la landing del producto */
+/* landing del producto: aparece mientras el visor crece */
 .faceBack {
-  transform: rotateY(180deg);
   color: #eaf3ea;
   overflow-y: auto;
   overscroll-behavior: contain;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 500ms ease 300ms;
+}
+.viewerOpen .faceBack {
+  opacity: 1;
+  pointer-events: auto;
 }
 .faceBack::before {
   content: "";

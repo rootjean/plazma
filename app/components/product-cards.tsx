@@ -30,10 +30,37 @@ const steps = [
 /** Duración de la animación de apertura/cierre (ver CSS). */
 const FLIP_MS = 1100;
 
+/** Separación entre cards (ver gap de .track en el CSS). */
+const GAP = 14;
+
 export default function ProductCards() {
-  const railRef = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const originRef = useRef<HTMLButtonElement | null>(null);
   const viewerRef = useRef<HTMLDivElement>(null);
+
+  /* Slider por pasos: solo se muestran cards completas. */
+  const [index, setIndex] = useState(0);
+  const [slider, setSlider] = useState({ step: 244, visible: 2, width: 0 });
+
+  useEffect(() => {
+    const measure = () => {
+      const wrap = wrapRef.current;
+      const card = trackRef.current?.children[0] as HTMLElement | undefined;
+      if (!wrap || !card) return;
+      const step = card.offsetWidth + GAP;
+      const visible = Math.max(1, Math.floor((wrap.clientWidth + GAP) / step));
+      setSlider({ step, visible, width: visible * step - GAP });
+      setIndex((i) => Math.min(i, Math.max(products.length - visible, 0)));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  const maxIndex = Math.max(products.length - slider.visible, 0);
+  const slide = (dir: number) =>
+    setIndex((i) => Math.min(Math.max(i + dir, 0), maxIndex));
 
   const [active, setActive] = useState<Product | null>(null);
   const [open, setOpen] = useState(false);
@@ -88,16 +115,19 @@ export default function ProductCards() {
     return () => window.removeEventListener("keydown", onKey);
   }, [active, closeCard]);
 
-  const scrollBy = (dir: number) => {
-    const rail = railRef.current;
-    rail?.scrollBy({ left: dir * rail.clientWidth * 0.6, behavior: "smooth" });
-  };
-
   return (
-    <div>
-      {/* Riel de cards simples */}
-      <div className={styles.rail} ref={railRef}>
-        {products.map((p, i) => (
+    <div ref={wrapRef}>
+      {/* Slider: la ventana solo muestra cards completas */}
+      <div
+        className={styles.viewport}
+        style={slider.width ? { width: slider.width } : undefined}
+      >
+        <div
+          className={styles.track}
+          ref={trackRef}
+          style={{ transform: `translateX(-${index * slider.step}px)` }}
+        >
+          {products.map((p, i) => (
           <button
             key={p.id}
             type="button"
@@ -111,7 +141,8 @@ export default function ProductCards() {
             <p className={styles.cardDesc}>{p.desc}</p>
             <span className={styles.cardCta}>Ver más →</span>
           </button>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Controles */}
@@ -120,7 +151,8 @@ export default function ProductCards() {
           type="button"
           className={styles.arrow}
           aria-label="Ver productos anteriores"
-          onClick={() => scrollBy(-1)}
+          disabled={index === 0}
+          onClick={() => slide(-1)}
         >
           ←
         </button>
@@ -128,7 +160,8 @@ export default function ProductCards() {
           type="button"
           className={styles.arrow}
           aria-label="Ver productos siguientes"
-          onClick={() => scrollBy(1)}
+          disabled={index >= maxIndex}
+          onClick={() => slide(1)}
         >
           →
         </button>
