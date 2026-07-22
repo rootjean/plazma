@@ -1,0 +1,445 @@
+/* ---------- riel de cards simples ---------- */
+.rail {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 8px 4px 16px;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  position: relative;
+  flex: 0 0 auto;
+  width: 230px;
+  height: 250px;
+  scroll-snap-align: start;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 26px 22px;
+  margin: 0;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  color: #eaf3ea;
+  background:
+    radial-gradient(140% 160% at 15% 0%, rgba(193, 235, 20, 0.16), transparent 60%),
+    linear-gradient(180deg, #16220c, #0a0f04);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  transition:
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 400ms ease,
+    border-color 300ms ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(193, 235, 20, 0.5);
+}
+.card:focus-visible {
+  outline: 3px solid #c1eb14;
+  outline-offset: 3px;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 12px 0 0 12px;
+  background: #c1eb14;
+}
+.cardHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.num {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: #9fb896;
+}
+.cardTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.cardDesc {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #9fb896;
+}
+.cardCta {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #c1eb14;
+}
+
+/* ---------- controles ---------- */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  color: #eaf3ea;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  transition:
+    background 240ms ease,
+    border-color 240ms ease;
+}
+.arrow:hover {
+  background: rgba(193, 235, 20, 0.2);
+  border-color: #c1eb14;
+}
+.hint {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(234, 243, 234, 0.6);
+  margin-left: 4px;
+}
+
+/* ---------- fondo oscuro ---------- */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(4, 8, 2, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.backdropVisible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---------- visor: crece desde la card y gira ---------- */
+.viewer {
+  position: fixed;
+  z-index: 100;
+  visibility: hidden;
+  perspective: 2000px;
+  transition:
+    top 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+    left 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+    width 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.viewerActive {
+  visibility: visible;
+}
+
+/* la pieza que gira: frente = card, espalda = landing */
+.flip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.viewerOpen .flip {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(140% 160% at 15% 0%, rgba(193, 235, 20, 0.16), transparent 60%),
+    linear-gradient(180deg, #16220c, #0a0f04);
+  transition: border-radius 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.viewerOpen .face {
+  border-radius: 0;
+}
+
+/* frente: réplica de la card */
+.faceFront {
+  color: #eaf3ea;
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.faceFront::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #c1eb14;
+}
+
+/* espalda: la landing del producto */
+.faceBack {
+  transform: rotateY(180deg);
+  color: #eaf3ea;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.faceBack::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: #c1eb14;
+}
+
+.landing {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 700ms ease,
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.viewerOpen .landing {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 750ms;
+}
+
+/* header propio de la landing (cubre el header de la página) */
+.landingHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px clamp(20px, 4vw, 48px);
+  background: rgba(10, 15, 4, 0.75);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.landingBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.landingBrandName {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9fb896;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 12px;
+}
+.landingHeaderCta {
+  display: inline-block;
+  border-radius: 9999px;
+  background: #c1eb14;
+  color: #09090b;
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 8px 20px;
+  text-decoration: none;
+  transition: background 240ms ease;
+}
+.landingHeaderCta:hover {
+  background: #d3f74a;
+}
+
+/* cuerpo de la landing */
+.landingBody {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 64px) clamp(20px, 5vw, 48px) 0;
+}
+
+/* secciones inferiores */
+.sectionTitle {
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 20px;
+}
+.sectionTitle span {
+  color: #c1eb14;
+}
+.steps {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin: 0 0 48px;
+}
+.step {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: border-color 300ms ease, transform 300ms ease;
+}
+.step:hover {
+  border-color: rgba(193, 235, 20, 0.5);
+  transform: translateY(-4px);
+}
+.stepNum {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: #c1eb14;
+}
+.stepTitle {
+  margin: 8px 0 6px;
+  font-weight: 600;
+}
+.stepDesc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #9fb896;
+  line-height: 1.5;
+}
+
+/* banda CTA final */
+.landingCtaBand {
+  border: 1px solid rgba(193, 235, 20, 0.35);
+  border-radius: 16px;
+  padding: clamp(24px, 4vw, 40px);
+  text-align: center;
+  background: radial-gradient(120% 160% at 50% 0%, rgba(193, 235, 20, 0.12), transparent 70%);
+  margin-bottom: 48px;
+}
+.landingCtaBand h3 {
+  margin: 0 0 8px;
+  font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+}
+.landingCtaBand p {
+  margin: 0 0 20px;
+  color: #9fb896;
+  font-size: 0.92rem;
+}
+
+/* pie de la landing */
+.landingFooter {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px clamp(20px, 5vw, 48px) 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: #9fb896;
+}
+
+.landingTag {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c1eb14;
+  margin: 0 0 12px;
+}
+.landingTitle {
+  font-size: clamp(1.8rem, 5vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+}
+.landingText {
+  margin: 0 0 26px;
+  max-width: 56ch;
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  line-height: 1.6;
+  color: #cdd9c8;
+}
+.featureList {
+  list-style: none;
+  margin: 0 0 32px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.featureList li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 0.92rem;
+  color: #eaf3ea;
+}
+.featureList li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  color: #c1eb14;
+}
+.landingCta {
+  display: inline-block;
+  border-radius: 9999px;
+  background: #c1eb14;
+  color: #09090b;
+  font-weight: 600;
+  padding: 12px 32px;
+  text-decoration: none;
+  transition: background 240ms ease;
+}
+.landingCta:hover {
+  background: #d3f74a;
+}
+
+.close {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(234, 243, 234, 0.4);
+  background: rgba(10, 15, 4, 0.4);
+  color: #eaf3ea;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 500ms ease 700ms,
+    background 240ms ease;
+}
+.viewerOpen .close {
+  opacity: 1;
+}
+.close:hover {
+  background: rgba(193, 235, 20, 0.25);
+}
+
+@media (max-width: 640px) {
+  .card {
+    width: 190px;
+    height: 230px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewer,
+  .flip,
+  .backdrop,
+  .landing,
+  .face {
+    transition-duration: 200ms;
+  }
+}
