@@ -1,65 +1,83 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Reveal from "../components/reveal";
+import { products } from "../lib/products";
 
 export const metadata: Metadata = {
   title: "Soluciones",
   description:
-    "Aplicaciones SaaS de Plazma Ideas: gestión empresarial, automatización, analítica y más.",
+    "Aplicaciones SaaS de Plazma Ideas: Alia (agentes de IA por WhatsApp) e INSCHOOL (gestión escolar con QR).",
 };
-
-const soluciones = [
-  {
-    title: "Gestión empresarial",
-    desc: "ERP en la nube para administrar ventas, compras, inventario y facturación electrónica desde un solo panel.",
-  },
-  {
-    title: "Automatización de procesos",
-    desc: "Flujos de trabajo digitales que eliminan tareas manuales y reducen errores operativos.",
-  },
-  {
-    title: "Analítica de datos",
-    desc: "Dashboards e indicadores en tiempo real para decisiones basadas en datos.",
-  },
-  {
-    title: "CRM y ventas",
-    desc: "Seguimiento de clientes, embudos de venta y campañas en una sola plataforma.",
-  },
-  {
-    title: "Gestión de talento",
-    desc: "Control de asistencia, planillas y evaluación de desempeño para tu equipo.",
-  },
-  {
-    title: "Soluciones a medida",
-    desc: "¿Tu reto no encaja en una categoría? Diseñamos la aplicación SaaS que tu negocio necesita.",
-  },
-];
 
 export default function SolucionesPage() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 pb-20 pt-28 sm:px-6">
-      <h1 className="text-4xl font-bold tracking-tight">Soluciones</h1>
-      <p className="mt-4 max-w-2xl text-zinc-600 dark:text-zinc-400">
-        Somos una solucionadora de tecnología: cada producto es una aplicación
-        SaaS lista para integrarse a tu operación.
-      </p>
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {soluciones.map((s) => (
-          <div
-            key={s.title}
-            className="flex flex-col rounded-2xl border border-zinc-200 p-6 transition-shadow hover:shadow-lg dark:border-zinc-800"
-          >
-            <h2 className="text-lg font-semibold">{s.title}</h2>
-            <p className="mt-2 flex-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {s.desc}
-            </p>
+    <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-32 sm:px-6">
+      <Reveal className="max-w-2xl">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+          Soluciones
+        </h1>
+        <p className="mt-4 text-zinc-600 dark:text-zinc-400">
+          Somos una solucionadora de tecnología: cada producto es una aplicación
+          SaaS lista para integrarse a tu operación y crecer contigo.
+        </p>
+      </Reveal>
+
+      <div className="mt-14 grid gap-6 md:grid-cols-2">
+        {products.map((p, i) => (
+          <Reveal key={p.id} from="up" delay={i * 110}>
+            <div className="card-lift flex h-full flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-950">
+              <p className="text-sm font-semibold text-brand-dark dark:text-brand">
+                {p.audience}
+              </p>
+              <h2 className="mt-2 text-3xl font-extrabold tracking-tight">
+                {p.title}
+              </h2>
+              <p className="mt-1 text-lg font-semibold text-zinc-700 dark:text-zinc-300">
+                {p.tagline}
+              </p>
+              <p className="mt-4 flex-1 text-sm text-zinc-600 dark:text-zinc-400">
+                {p.landing}
+              </p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {p.features.map((f) => (
+                  <span
+                    key={f}
+                    className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs font-medium text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+                  >
+                    {f}
+                  </span>
+                ))}
+              </div>
+              <Link
+                href="/demo"
+                className="mt-7 inline-block w-fit rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-zinc-950 transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-light"
+              >
+                Solicitar demo →
+              </Link>
+            </div>
+          </Reveal>
+        ))}
+
+        {/* Solución a medida — placeholder para el crecimiento del catálogo */}
+        <Reveal from="up" delay={products.length * 110} className="md:col-span-2">
+          <div className="card-lift flex flex-col items-start gap-4 rounded-3xl border border-dashed border-brand/50 bg-brand/5 p-8 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">
+                ¿Tu reto no encaja en una categoría?
+              </h2>
+              <p className="mt-2 max-w-xl text-sm text-zinc-600 dark:text-zinc-400">
+                Nuestro catálogo sigue creciendo. Diseñamos la aplicación SaaS a
+                la medida de lo que tu negocio necesita.
+              </p>
+            </div>
             <Link
-              href="/demo"
-              className="mt-4 text-sm font-medium text-brand hover:text-brand-light"
+              href="/contacto"
+              className="inline-block flex-shrink-0 rounded-full border border-zinc-900 px-6 py-2.5 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900 hover:text-white dark:border-zinc-100 dark:hover:bg-zinc-100 dark:hover:text-zinc-900"
             >
-              Solicitar demo →
+              Conversemos
             </Link>
           </div>
-        ))}
+        </Reveal>
       </div>
     </div>
   );

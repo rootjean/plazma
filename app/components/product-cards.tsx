@@ -229,14 +229,41 @@ export default function ProductCards() {
 
                 {/* Cuerpo */}
                 <div className={styles.landingBody}>
-                  <p className={styles.landingTag}>Plazma Ideas · SaaS</p>
                   <h2 className={styles.landingTitle}>{active.title}</h2>
+                  <p className={styles.landingSub}>{active.tagline}</p>
                   <p className={styles.landingText}>{active.landing}</p>
-                  <ul className={styles.featureList}>
+
+                  <div className={styles.chips}>
                     {active.features.map((f) => (
-                      <li key={f}>{f}</li>
+                      <span key={f} className={styles.chip}>
+                        <svg
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.3 3.3 6.8-6.8a1 1 0 0 1 1.4 0Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        {f}
+                      </span>
                     ))}
-                  </ul>
+                  </div>
+
+                  {/* Qué incluye */}
+                  <h3 className={styles.sectionTitle}>
+                    Qué <span>incluye</span>
+                  </h3>
+                  <div className={styles.highlightGrid}>
+                    {active.highlights.map((h) => (
+                      <div key={h.title} className={styles.highlightCard}>
+                        <p className={styles.highlightTitle}>{h.title}</p>
+                        <p className={styles.highlightDesc}>{h.desc}</p>
+                      </div>
+                    ))}
+                  </div>
 
                   {/* Cómo lo implementamos */}
                   <h3 className={styles.sectionTitle}>

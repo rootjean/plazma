@@ -360,19 +360,18 @@
   color: #9fb896;
 }
 
-.landingTag {
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #c1eb14;
-  margin: 0 0 12px;
-}
 .landingTitle {
   font-size: clamp(1.8rem, 5vw, 3.4rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.02em;
-  margin: 0 0 16px;
+  margin: 0 0 10px;
+}
+.landingSub {
+  margin: 0 0 18px;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 600;
+  color: #c1eb14;
 }
 .landingText {
   margin: 0 0 26px;
@@ -381,25 +380,65 @@
   line-height: 1.6;
   color: #cdd9c8;
 }
-.featureList {
-  list-style: none;
-  margin: 0 0 32px;
-  padding: 0;
-  display: grid;
+
+/* chips de beneficios (con check, sin viñetas) */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin: 0 0 40px;
 }
-.featureList li {
-  position: relative;
-  padding-left: 22px;
-  font-size: 0.92rem;
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(193, 235, 20, 0.3);
+  background: rgba(193, 235, 20, 0.08);
+  font-size: 0.85rem;
   color: #eaf3ea;
 }
-.featureList li::before {
-  content: "✦";
-  position: absolute;
-  left: 0;
+.chip svg {
+  width: 15px;
+  height: 15px;
   color: #c1eb14;
+  flex-shrink: 0;
+}
+
+/* grilla de características (bloques, sin viñetas) */
+.highlightGrid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin: 0 0 48px;
+}
+.highlightCard {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 22px;
+  background: rgba(255, 255, 255, 0.04);
+  transition:
+    border-color 300ms ease,
+    transform 300ms ease,
+    background 300ms ease;
+}
+.highlightCard:hover {
+  border-color: rgba(193, 235, 20, 0.5);
+  background: rgba(193, 235, 20, 0.06);
+  transform: translateY(-4px);
+}
+.highlightTitle {
+  margin: 0 0 8px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #f2f7ef;
+}
+.highlightDesc {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #9fb896;
 }
 .landingCta {
   display: inline-block;
