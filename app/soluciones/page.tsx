@@ -48,12 +48,24 @@ export default function SolucionesPage() {
                   </span>
                 ))}
               </div>
-              <Link
-                href="/demo"
-                className="mt-7 inline-block w-fit rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-zinc-950 transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-light"
-              >
-                Solicitar demo →
-              </Link>
+              <div className="mt-7 flex flex-wrap gap-2.5">
+                <Link
+                  href="/demo"
+                  className="inline-block w-fit rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-zinc-950 transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-light"
+                >
+                  Solicitar demo →
+                </Link>
+                {p.loginUrl && (
+                  <a
+                    href={p.loginUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block w-fit rounded-full border border-zinc-400 px-6 py-2.5 text-sm font-semibold text-zinc-800 transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-900 hover:bg-zinc-900 hover:text-white dark:border-zinc-600 dark:text-zinc-200 dark:hover:border-white dark:hover:bg-white dark:hover:text-zinc-900"
+                  >
+                    Ingresar →
+                  </a>
+                )}
+              </div>
             </div>
           </Reveal>
         ))}

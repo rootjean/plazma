@@ -18,6 +18,8 @@ export type Product = {
   highlights: Highlight[];
   /** Beneficios resumidos en chips. */
   features: string[];
+  /** URL de acceso/login para usuarios (opcional). */
+  loginUrl?: string;
 };
 
 export const products: Product[] = [
@@ -63,6 +65,7 @@ export const products: Product[] = [
       "CRM con ficha de cliente",
       "Agendamiento de citas",
     ],
+    loginUrl: "https://alia.plazmaideas.com/login",
   },
   {
     id: "inschool",

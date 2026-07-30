@@ -1,20 +1,48 @@
 import { COMPANY_SYSTEM_PROMPT } from "@/app/lib/company-context";
+import { pruneExpired, rateLimit } from "@/app/lib/rate-limit";
 
 /** Endpoint y modelo de Groq (compatible con la API de OpenAI). */
 const GROQ_URL = "https://api.groq.com/openai/v1/responses";
 const GROQ_MODEL = "openai/gpt-oss-20b";
 
+/** Límite: 15 mensajes por minuto por IP. */
+const RATE_LIMIT = 15;
+const RATE_WINDOW_MS = 60_000;
+
 type ChatMessage = { role: "user" | "assistant"; content: string };
+
+function clientIp(request: Request): string {
+  const fwd = request.headers.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0].trim();
+  return request.headers.get("x-real-ip")?.trim() || "unknown";
+}
 
 export async function POST(request: Request) {
   const apiKey = process.env.GROQ_API_KEY;
+
+  // Protección contra abuso: límite por IP.
+  const now = Date.now();
+  pruneExpired(now);
+  const limit = rateLimit(clientIp(request), RATE_LIMIT, RATE_WINDOW_MS, now);
+  if (!limit.ok) {
+    return Response.json(
+      {
+        reply:
+          "Estás enviando mensajes muy rápido. Espera un momento y vuelve a intentarlo.",
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfter) },
+      }
+    );
+  }
 
   // Sin API key configurada: respondemos de forma controlada (no rompemos la UI).
   if (!apiKey) {
     return Response.json(
       {
         reply:
-          "El asistente aún no está activado. Configura tu GROQ_API_KEY en el archivo .env.local para habilitarlo. Mientras tanto, escríbenos a contacto@plazmaideas.com.",
+          "El asistente aún no está activado. Configura la variable GROQ_API_KEY en el entorno para habilitarlo. Mientras tanto, escríbenos a contacto@plazmaideas.com.",
       },
       { status: 200 }
     );

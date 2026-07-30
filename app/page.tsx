@@ -209,12 +209,37 @@ export default function Home() {
                     </span>
                   ))}
                 </div>
-                <Link
-                  href="/demo"
-                  className="mt-8 inline-block rounded-full bg-brand px-7 py-3 font-semibold text-zinc-950 transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-light hover:shadow-lg hover:shadow-brand/30"
-                >
-                  Ver {p.title} en acción
-                </Link>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link
+                    href="/demo"
+                    className="inline-block rounded-full bg-brand px-7 py-3 font-semibold text-zinc-950 transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-light hover:shadow-lg hover:shadow-brand/30"
+                  >
+                    Ver {p.title} en acción
+                  </Link>
+                  {p.loginUrl && (
+                    <a
+                      href={p.loginUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-zinc-400 px-7 py-3 font-semibold text-zinc-800 transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-900 hover:bg-zinc-900 hover:text-white dark:border-zinc-600 dark:text-zinc-200 dark:hover:border-white dark:hover:bg-white dark:hover:text-zinc-900"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        className="h-4 w-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"
+                        />
+                      </svg>
+                      Ingresar a {p.title}
+                    </a>
+                  )}
+                </div>
               </Reveal>
 
               {/* Grilla de características */}

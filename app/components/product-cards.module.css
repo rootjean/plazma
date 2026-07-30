@@ -278,6 +278,39 @@
   background: #d3f74a;
 }
 
+/* botón "Ingresar" en el header de la landing */
+.landingLogin {
+  display: inline-block;
+  border-radius: 9999px;
+  border: 1px solid rgba(234, 243, 234, 0.4);
+  color: #eaf3ea;
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 7px 18px;
+  text-decoration: none;
+  transition:
+    background 240ms ease,
+    border-color 240ms ease;
+}
+.landingLogin:hover {
+  background: rgba(193, 235, 20, 0.15);
+  border-color: #c1eb14;
+}
+
+/* enlace "Ingresar" fantasma en la banda CTA */
+.landingLoginGhost {
+  display: inline-block;
+  margin-top: 14px;
+  color: #c1eb14;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 240ms ease;
+}
+.landingLoginGhost:hover {
+  color: #d3f74a;
+}
+
 /* cuerpo de la landing */
 .landingBody {
   max-width: 960px;

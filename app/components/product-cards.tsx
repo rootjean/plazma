@@ -213,6 +213,16 @@ export default function ProductCards() {
                     </span>
                   </div>
                   <div className={styles.landingBrand}>
+                    {active.loginUrl && (
+                      <a
+                        href={active.loginUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.landingLogin}
+                      >
+                        Ingresar
+                      </a>
+                    )}
                     <Link href="/demo" className={styles.landingHeaderCta}>
                       Solicitar demo
                     </Link>
@@ -291,6 +301,16 @@ export default function ProductCards() {
                     <Link href="/demo" className={styles.landingCta}>
                       Registrar una demo
                     </Link>
+                    {active.loginUrl && (
+                      <a
+                        href={active.loginUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.landingLoginGhost}
+                      >
+                        Ingresar a {active.title} →
+                      </a>
+                    )}
                   </div>
                 </div>
 
